@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My UV Proxy</title>
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
+</head>
+<body>
+    <h1>Ultraviolet on Vercel</h1>
+    <input type="text" id="urlInput" placeholder="Enter URL or search">
+    <button id="searchButton">Go</button>
+    <iframe id="iframeWindow" style="width:100%; height:500px; border:none; margin-top:20px;"></iframe>
+
+    <script>
+        const stockSW = '/uv/sw.js';
+        const swConfig = { scope: __uv$config.prefix };
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(stockSW, swConfig);
+        }
+
+        document.getElementById("searchButton").onclick = function() {
+            let url = document.getElementById("urlInput").value;
+            if (!url.includes(".")) {
+                url = "https://www.google.com/search?q=" + encodeURIComponent(url);
+            } else if (!url.startsWith("http")) {
+                url = "https://" + url;
+            }
+            const iframe = document.getElementById("iframeWindow");
+            iframe.src = __uv$config.prefix + __uv$config.encodeUrl(url);
+        };
+    </script>
+</body>
+</html>
